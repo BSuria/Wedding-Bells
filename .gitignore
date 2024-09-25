@@ -6,6 +6,12 @@
 export.cfg
 export_presets.cfg
 
+# Jetbrains
+.idea/
+
+# Visual Studio
+.sln
+
 # Imported translations (automatically generated from CSV files)
 *.translation
 
