@@ -1,0 +1,14 @@
+[remap]
+
+importer="yarnscript"
+type="Resource"
+uid="uid://cxikhkfwo5m2"
+path="res://.godot/imported/Wedding-Script.yarn-3114f89433cb63d52d02f46cdd8d8043.tres"
+
+[deps]
+
+source_file="res://yarn/Wedding-Script.yarn"
+dest_files=["res://.godot/imported/Wedding-Script.yarn-3114f89433cb63d52d02f46cdd8d8043.tres"]
+
+[params]
+

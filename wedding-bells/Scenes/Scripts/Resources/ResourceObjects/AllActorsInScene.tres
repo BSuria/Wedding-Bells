@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ActorsInSceneData" load_steps=4 format=3 uid="uid://d0qy46hq0o1x8"]
+
+[ext_resource type="Resource" uid="uid://c6qiuflrd6l4l" path="res://Scenes/Scripts/Resources/ResourceObjects/Manuel.tres" id="1_0n5yh"]
+[ext_resource type="Script" path="res://Scenes/Scripts/Resources/Scripts/ActorsInSceneData.cs" id="1_7r0ac"]
+[ext_resource type="Resource" uid="uid://btrsy8ugkhvcb" path="res://Scenes/Scripts/Resources/ResourceObjects/Valerie.tres" id="2_8ebyw"]
+
+[resource]
+script = ExtResource("1_7r0ac")
+Actors = {
+"Manuel": ExtResource("1_0n5yh"),
+"Valerie": ExtResource("2_8ebyw")
+}
+_actorData = ExtResource("2_8ebyw")
+Add = false
+_actorToRemove = ""
+Remove = false
+Check = false

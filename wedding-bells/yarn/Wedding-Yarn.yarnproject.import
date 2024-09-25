@@ -1,0 +1,14 @@
+[remap]
+
+importer="yarnproject"
+type="Resource"
+uid="uid://bsw05y8clh24u"
+path="res://.godot/imported/Wedding-Yarn.yarnproject-c8a629efb43b54f5bb05b126ce05f72b.tres"
+
+[deps]
+
+source_file="res://yarn/Wedding-Yarn.yarnproject"
+dest_files=["res://.godot/imported/Wedding-Yarn.yarnproject-c8a629efb43b54f5bb05b126ce05f72b.tres"]
+
+[params]
+

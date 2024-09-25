@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ActorData" load_steps=4 format=3 uid="uid://c6qiuflrd6l4l"]
+
+[ext_resource type="Texture2D" uid="uid://g50yqbjm55pc" path="res://addons/YarnSpinner-Godot/Textures/Selector-On.png" id="2_6hpm5"]
+[ext_resource type="Texture2D" uid="uid://rtbsbe5ulun8" path="res://Scenes/Sprites/LastLineSeparator1.png" id="2_eub60"]
+[ext_resource type="Script" path="res://Scenes/Scripts/Resources/Scripts/ActorData.cs" id="2_jk02e"]
+
+[resource]
+script = ExtResource("2_jk02e")
+ActorSprites = {
+"Happy": ExtResource("2_eub60"),
+"Neutral": ExtResource("2_6hpm5")
+}
+_spriteName = "Neutral"
+_spriteTexture = ExtResource("2_6hpm5")
+Add = false
+_actorName = "Manuel"

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ActorData" load_steps=4 format=3 uid="uid://btrsy8ugkhvcb"]
+
+[ext_resource type="Texture2D" uid="uid://g50yqbjm55pc" path="res://addons/YarnSpinner-Godot/Textures/Selector-On.png" id="1_mkyka"]
+[ext_resource type="Script" path="res://Scenes/Scripts/Resources/Scripts/ActorData.cs" id="1_stdpx"]
+[ext_resource type="Texture2D" uid="uid://co8mxi2dd8pyd" path="res://Scenes/Sprites/OptionSelected1.png" id="2_mblae"]
+
+[resource]
+script = ExtResource("1_stdpx")
+ActorSprites = {
+"Happy": ExtResource("2_mblae"),
+"Neutral": ExtResource("1_mkyka")
+}
+_spriteName = "Neutral"
+_spriteTexture = ExtResource("1_mkyka")
+Add = false
+_actorName = "Valerie"
