@@ -1,16 +1,4 @@
-﻿title: Start
-tags:
----
-Narrator: Oh, hello!
-    -> Hi, where am I?
-        Narrator: You're in Godot!
-            -> Oh.
-                <<jump Oh>>
-            -> How did I get here?
-                <<jump Godot>>
-===
-
-title: Oh
+﻿title: Oh
 ---
 <<actorPos Manuel 1>>
 <<actorPos Valerie 2>>
@@ -18,15 +6,11 @@ Manuel: One line
 Valerie: One line
 <<setSprite Manuel Happy>>
 Manuel: Twooooooooooooooooooooooooooo oooooooooo lines
+Protag: Hello I'm the protagonist
 <<setSprite Valerie Happy>>
 Valerie: Threeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee eeeeeeeeeeeeeeeeeeeeee lines
 <<setSprite Manuel Neutral>>
 Manuel: fooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo oooooooooooooooooooour lines
 <<setSprite Valerie Neutral>>
 Valerie: fiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii iiiiiiiiiiiiiiiiiiiiiiiiiiiiii iiiiiiiiiiiiiiiiiiiiiiiiiiiiiive lines
-===
-
-title: Godot
----
-Narrator: Someone read the Beginner's Guide!
 ===

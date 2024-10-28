@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://de1ttg0dkjig7"]
+[gd_scene load_steps=24 format=3 uid="uid://de1ttg0dkjig7"]
 
 [ext_resource type="Script" path="res://addons/YarnSpinner-Godot/Runtime/DialogueRunner.cs" id="1_d2cbf"]
 [ext_resource type="Script" path="res://Scenes/Scripts/TestControl.cs" id="3_0mfya"]
@@ -11,51 +11,41 @@
 [ext_resource type="StyleBox" uid="uid://c3mta1ok76ssl" path="res://addons/YarnSpinner-Godot/Scenes/RoundedViewRichTextLabelStyleBox.tres" id="6_uud3p"]
 [ext_resource type="StyleBox" uid="uid://itxqi5xpilu6" path="res://addons/YarnSpinner-Godot/Scenes/RoundedViewStylebox.tres" id="7_dfhul"]
 [ext_resource type="Script" path="res://addons/YarnSpinner-Godot/Runtime/LineProviders/TextLineProvider.cs" id="7_gfbgw"]
+[ext_resource type="Script" path="res://Scenes/Scripts/ExpandBubble.cs" id="8_835dp"]
 [ext_resource type="Texture2D" uid="uid://d3p8dh5owmvs8" path="res://addons/YarnSpinner-Godot/Textures/NextLineIndicator.png" id="8_dgamu"]
+[ext_resource type="Texture2D" uid="uid://bmmlsae8ymuu2" path="res://Scenes/Sprites/Selector-On1.png" id="8_qvaa8"]
 [ext_resource type="PackedScene" uid="uid://dhnl6qatalt6x" path="res://addons/YarnSpinner-Godot/Scenes/RoundedOptionView.tscn" id="10_o6bo7"]
+[ext_resource type="StyleBox" uid="uid://rlrkluns7mv1" path="res://Scenes/Styles/testBox.tres" id="10_uxt2g"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ymf4v"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jqmf6"]
+content_margin_left = 34.0
+content_margin_top = 7.0
+content_margin_right = 34.0
+content_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_665xh"]
+content_margin_left = 17.0
+content_margin_top = 8.0
+content_margin_right = 17.0
+content_margin_bottom = 8.0
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2le05"]
 texture = ExtResource("8_dgamu")
-modulate_color = Color(0.658824, 0.941176, 0.917647, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_h4m8k"]
 texture = ExtResource("8_dgamu")
-modulate_color = Color(0.356863, 0.529412, 0.501961, 1)
+modulate_color = Color(1, 0.360784, 1, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_20y0r"]
 texture = ExtResource("8_dgamu")
-modulate_color = Color(0.529412, 0.788235, 0.764706, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_60s5a"]
 texture = ExtResource("8_dgamu")
 region_rect = Rect2(0, 0, 96, 96)
 
 [node name="Node2D" type="Node2D"]
-
-[node name="ClicktoStart" type="Node" parent="."]
-script = ExtResource("3_0mfya")
-_dialogueManagerPath = NodePath("../Dialogue Manager")
-
-[node name="Dialogue Manager" type="Node" parent="."]
-script = ExtResource("4_yuct2")
-_viewControlPath = NodePath("../RoundedYarnSpinnerCanvasLayer/LineView/ViewControl")
-_dialogueRunnerPath = NodePath("../RoundedYarnSpinnerCanvasLayer/DialogueRunner")
-_lineViewPath = NodePath("../RoundedYarnSpinnerCanvasLayer/LineView")
-_lineBubblePath = NodePath("../RoundedYarnSpinnerCanvasLayer/LineView/ViewControl/LineText/LineBubble")
-_actorPosOnePath = NodePath("../Sprite2D")
-_actorPosTwoPath = NodePath("../Sprite2D2")
-_actorsInSceneData = ExtResource("3_dx8fn")
-
-[node name="PlaceHolderChar" type="Node2D" parent="."]
-position = Vector2(253, 306)
-
-[node name="PlaceholderChar2" type="Node2D" parent="."]
-position = Vector2(823, 307)
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(576, 324)
 
 [node name="RoundedYarnSpinnerCanvasLayer" type="CanvasLayer" parent="."]
 
@@ -85,10 +75,12 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("3_q20r5")
 viewControlPath = NodePath("ViewControl")
-lineTextPath = NodePath("ViewControl/LineText")
-characterNameText = NodePath("ViewControl/LineText/CharacterNameText")
+lineTextPath = NodePath("ViewControl/BubbleText")
+lineProtagTextPath = NodePath("ViewControl/LineText2")
+characterNameText = NodePath("ViewControl/BubbleText/CharacterNameText")
 typewriterEffectSpeed = 80.0
 continueButton = NodePath("ViewControl/LineText/LineBubble/ContinueButton")
+protagName = "Protag"
 
 [node name="ViewControl" type="Panel" parent="RoundedYarnSpinnerCanvasLayer/LineView"]
 layout_mode = 2
@@ -98,18 +90,45 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ymf4v")
 
-[node name="LineText" type="RichTextLabel" parent="RoundedYarnSpinnerCanvasLayer/LineView/ViewControl"]
+[node name="BubbleText" type="RichTextLabel" parent="RoundedYarnSpinnerCanvasLayer/LineView/ViewControl"]
 clip_contents = false
-custom_minimum_size = Vector2(0, 160)
+custom_minimum_size = Vector2(220, 60)
+layout_mode = 0
+offset_right = 220.0
+offset_bottom = 60.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxEmpty_jqmf6")
+bbcode_enabled = true
+text = "OneLine"
+scroll_active = false
+shortcut_keys_enabled = false
+script = ExtResource("8_835dp")
+maxWidth = 600.0
+maxHeight = 1000.0
+minWidth = 220.0
+minHeight = 60.0
+LineViewPath = NodePath("../..")
+
+[node name="BubblePanel" type="Panel" parent="RoundedYarnSpinnerCanvasLayer/LineView/ViewControl/BubbleText"]
+show_behind_parent = true
+clip_contents = true
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.115451
-anchor_top = 0.149691
-anchor_right = 0.115451
-anchor_bottom = 0.149691
-offset_right = 744.91
-offset_bottom = 200.0
-size_flags_horizontal = 4
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = ExtResource("10_uxt2g")
+
+[node name="CharacterNameText" type="RichTextLabel" parent="RoundedYarnSpinnerCanvasLayer/LineView/ViewControl/BubbleText"]
+clip_contents = false
+layout_mode = 1
+offset_left = 6.0
+offset_top = -16.0
+offset_right = 228.0
+offset_bottom = 34.0
+scale = Vector2(0.5, 0.5)
 theme_override_colors/table_border = Color(0, 0, 0, 1)
 theme_override_colors/table_even_row_bg = Color(0, 0, 0, 1)
 theme_override_colors/table_odd_row_bg = Color(0, 0, 0, 1)
@@ -121,14 +140,76 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/bold_italics_font_size = 36
 theme_override_font_sizes/italics_font_size = 36
 theme_override_font_sizes/mono_font_size = 36
-theme_override_font_sizes/normal_font_size = 36
+theme_override_font_sizes/normal_font_size = 21
 theme_override_font_sizes/bold_font_size = 36
+theme_override_styles/focus = ExtResource("6_uud3p")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_665xh")
+bbcode_enabled = true
+text = "Character Name"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="CharacterNameBubble" type="Panel" parent="RoundedYarnSpinnerCanvasLayer/LineView/ViewControl/BubbleText/CharacterNameText"]
+self_modulate = Color(0.529412, 0.788235, 0.764706, 1)
+show_behind_parent = true
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme_override_styles/panel = ExtResource("10_uxt2g")
+
+[node name="Arrow" type="TextureRect" parent="RoundedYarnSpinnerCanvasLayer/LineView/ViewControl/BubbleText"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 19.0
+offset_top = -8.00001
+offset_right = 69.0
+offset_bottom = 92.0
+grow_horizontal = 2
+grow_vertical = 0
+rotation = 1.5708
+scale = Vector2(0.690787, 0.4)
+texture = ExtResource("8_qvaa8")
+
+[node name="LineText" type="RichTextLabel" parent="RoundedYarnSpinnerCanvasLayer/LineView/ViewControl"]
+visible = false
+clip_contents = false
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 0
+offset_right = 85.0
+offset_bottom = 100.0
+size_flags_horizontal = 4
+theme_override_colors/table_border = Color(0, 0, 0, 1)
+theme_override_colors/table_even_row_bg = Color(0, 0, 0, 1)
+theme_override_colors/table_odd_row_bg = Color(0, 0, 0, 1)
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_colors/font_selected_color = Color(0, 0, 0, 1)
+theme_override_colors/selection_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/bold_italics_font_size = 36
+theme_override_font_sizes/italics_font_size = 24
+theme_override_font_sizes/mono_font_size = 24
+theme_override_font_sizes/normal_font_size = 36
+theme_override_font_sizes/bold_font_size = 24
 theme_override_styles/focus = ExtResource("6_uud3p")
 theme_override_styles/normal = ExtResource("6_uud3p")
 bbcode_enabled = true
-text = "The dialogue text should appear here!"
 fit_content = true
 scroll_active = false
+script = ExtResource("8_835dp")
+maxWidth = 300.0
+maxHeight = 100.0
+LineViewPath = NodePath("../..")
 metadata/_edit_use_anchors_ = true
 
 [node name="LineBubble" type="Panel" parent="RoundedYarnSpinnerCanvasLayer/LineView/ViewControl/LineText"]
@@ -148,10 +229,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -422.915
-offset_top = -48.0
-offset_right = -230.915
-offset_bottom = 144.0
+offset_left = -71.0
+offset_top = -50.0
+offset_right = 121.0
+offset_bottom = 142.0
 grow_horizontal = 0
 grow_vertical = 0
 scale = Vector2(0.585706, 0.640663)
@@ -162,13 +243,17 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_20y0r")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_h4m8k")
 theme_override_styles/normal = SubResource("StyleBoxTexture_60s5a")
 
-[node name="CharacterNameText" type="RichTextLabel" parent="RoundedYarnSpinnerCanvasLayer/LineView/ViewControl/LineText"]
+[node name="LineText2" type="RichTextLabel" parent="RoundedYarnSpinnerCanvasLayer/LineView/ViewControl"]
 clip_contents = false
-custom_minimum_size = Vector2(40, 40)
+custom_minimum_size = Vector2(0, 160)
 layout_mode = 1
-offset_top = -71.0
-offset_right = 255.0
-offset_bottom = 59.0
+anchors_preset = -1
+anchor_top = 0.765
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
 theme_override_colors/table_border = Color(0, 0, 0, 1)
 theme_override_colors/table_even_row_bg = Color(0, 0, 0, 1)
 theme_override_colors/table_odd_row_bg = Color(0, 0, 0, 1)
@@ -180,27 +265,24 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/bold_italics_font_size = 36
 theme_override_font_sizes/italics_font_size = 36
 theme_override_font_sizes/mono_font_size = 36
-theme_override_font_sizes/normal_font_size = 21
+theme_override_font_sizes/normal_font_size = 36
 theme_override_font_sizes/bold_font_size = 36
 theme_override_styles/focus = ExtResource("6_uud3p")
 theme_override_styles/normal = ExtResource("6_uud3p")
 bbcode_enabled = true
-text = "Character Name"
+text = "aa"
 fit_content = true
 scroll_active = false
+metadata/_edit_use_anchors_ = true
 
-[node name="CharacterNameBubble" type="Panel" parent="RoundedYarnSpinnerCanvasLayer/LineView/ViewControl/LineText/CharacterNameText"]
-self_modulate = Color(0.529412, 0.788235, 0.764706, 1)
+[node name="LineBubble" type="Panel" parent="RoundedYarnSpinnerCanvasLayer/LineView/ViewControl/LineText2"]
 show_behind_parent = true
-clip_contents = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 26.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_vertical = 3
 theme_override_styles/panel = ExtResource("7_dfhul")
 
 [node name="OptionsListView" type="Control" parent="RoundedYarnSpinnerCanvasLayer" node_paths=PackedStringArray("lastLineCharacterNameText", "lastLineText", "viewControl", "boxContainer")]
@@ -332,8 +414,31 @@ script = ExtResource("6_efum4")
 [node name="TextLineProvider" type="Node2D" parent="RoundedYarnSpinnerCanvasLayer"]
 script = ExtResource("7_gfbgw")
 
+[node name="ClicktoStart" type="Node" parent="."]
+script = ExtResource("3_0mfya")
+_dialogueManagerPath = NodePath("../Dialogue Manager")
+
+[node name="Dialogue Manager" type="Node" parent="."]
+script = ExtResource("4_yuct2")
+_lineTextPath = NodePath("../RoundedYarnSpinnerCanvasLayer/LineView/ViewControl/BubbleText")
+_dialogueRunnerPath = NodePath("../RoundedYarnSpinnerCanvasLayer/DialogueRunner")
+_lineViewPath = NodePath("../RoundedYarnSpinnerCanvasLayer/LineView")
+_lineBubblePath = NodePath("../RoundedYarnSpinnerCanvasLayer/LineView/ViewControl/LineText/LineBubble")
+_actorPosOnePath = NodePath("../Sprite2D")
+_actorPosTwoPath = NodePath("../Sprite2D2")
+_actorsInSceneData = ExtResource("3_dx8fn")
+
+[node name="PlaceHolderChar" type="Node2D" parent="."]
+position = Vector2(253, 306)
+
+[node name="PlaceholderChar2" type="Node2D" parent="."]
+position = Vector2(823, 307)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(258, 320)
+position = Vector2(319, 640)
 
 [node name="Sprite2D2" type="Sprite2D" parent="."]
-position = Vector2(826, 320)
+position = Vector2(1528, 650)

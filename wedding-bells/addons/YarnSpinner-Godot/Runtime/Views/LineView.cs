@@ -87,12 +87,23 @@ namespace YarnSpinnerGodot
 		/// Node path from the inspector for <see cref="lineText"/>
 		/// </summary>
 		[Export] public NodePath lineTextPath;
+		
+		/// <summary>
+		/// Node path from the inspector for <see cref="the protagonist's lineText"/>
+		/// </summary>
+		[Export] public NodePath lineProtagTextPath;
 
 		/// <summary>
 		/// The <see cref="RichTextLabel"/> object that displays the text of
 		/// dialogue lines.
 		/// </summary>
 		public RichTextLabel lineText = null;
+		
+		/// <summary>
+		/// The <see cref="RichTextLabel"/> object that displays the text of
+		/// the protagonist's dialogue lines.
+		/// </summary>
+		public RichTextLabel protagLineText = null;
 
 		/// <summary>
 		/// Controls whether the <see cref="lineText"/> object will show the
@@ -152,6 +163,17 @@ namespace YarnSpinnerGodot
 		/// <seealso cref="useTypewriterEffect"/>
 		[Signal]
 		public delegate void onCharacterTypedEventHandler();
+		
+		/// <summary>
+		/// A signal that is emitted whenever a line is interrupted and must be finished as soon as possible.
+		/// </summary>
+		/// <remarks>
+		/// This event is only invoked when <see cref="useTypewriterEffect"/> is
+		/// <see langword="true"/>.
+		/// </remarks>
+		/// <seealso cref="useTypewriterEffect"/>
+		[Signal]
+		public delegate void onLineInterruptedEventHandler();
 
 		/// <summary>
 		/// A Unity Event that is called when a pause inside of the typewriter effect occurs.
@@ -229,6 +251,12 @@ namespace YarnSpinnerGodot
 		/// when to advance to the next line.</para></para>
 		/// </remarks>
 		[Export] public bool autoAdvance = false;
+		
+		/// <summary>
+		/// This is the name of the protagonist, when a character that has this name speaks, their lines will come
+		/// in a standard visual novel style.
+		/// </summary>
+		[Export] public string protagName = "";
 
 		/// <summary>
 		/// The current <see cref="LocalizedLine"/> that this line view is
@@ -265,9 +293,17 @@ namespace YarnSpinnerGodot
 				lineText = GetNode<RichTextLabel>(lineTextPath);
 				lineText.BbcodeEnabled = true;
 			}
-
+			
 			lineText.VisibleCharactersBehavior = TextServer.VisibleCharactersBehavior.CharsAfterShaping;
+			
+			if (protagLineText == null)
+			{
+				protagLineText = GetNode<RichTextLabel>(lineProtagTextPath);
+				protagLineText.BbcodeEnabled = true;
+			}
 
+			protagLineText.VisibleCharactersBehavior = TextServer.VisibleCharactersBehavior.CharsAfterShaping;
+			
 			if (viewControl == null)
 			{
 				viewControl = GetNode(viewControlPath) as Control;
@@ -288,6 +324,14 @@ namespace YarnSpinnerGodot
 				{
 					lineText.BbcodeEnabled = true;
 				}
+			}
+		}
+		
+		public override void _Input(InputEvent @event)
+		{
+			if (@event.IsActionPressed("AdvanceDialogue"))
+			{
+				OnContinueClicked();
 			}
 		}
 
@@ -329,6 +373,7 @@ namespace YarnSpinnerGodot
 		/// <inheritdoc/>
 		public void InterruptLine(LocalizedLine dialogueLine, Action onInterruptLineFinished)
 		{
+			RichTextLabel LineTextInUse = new RichTextLabel();
 			currentLine = dialogueLine;
 
 			if (currentStopToken is {CanInterrupt: true})
@@ -336,25 +381,37 @@ namespace YarnSpinnerGodot
 				currentStopToken.Interrupt();
 			}
 
+			//check if the protagonist is the one speaking this line, then decide which linetext to use based on that
+			if (SpeakingCharacter == protagName)
+			{
+				LineTextInUse = protagLineText;
+				lineText.Visible = false;
+			}
+			else
+			{
+				LineTextInUse = lineText;
+				protagLineText.Visible = false;
+			}
+			
 			// for now we are going to just immediately show everything
 			// later we will make it fade in
-			lineText.Visible = true;
+			LineTextInUse.Visible = true;
 			viewControl.Visible = true;
 			if (!IsInstanceValid(characterNameText))
 			{
 				if (showCharacterNameInLineView)
 				{
-					lineText.Text = dialogueLine.Text.Text;
+					LineTextInUse.Text = dialogueLine.Text.Text;
 				}
 				else
 				{
-					lineText.Text = dialogueLine.TextWithoutCharacterName.Text;
+					LineTextInUse.Text = dialogueLine.TextWithoutCharacterName.Text;
 				}
 			}
 			else
 			{
 				characterNameText.Text = dialogueLine.CharacterName;
-				lineText.Text = dialogueLine.TextWithoutCharacterName.Text;
+				LineTextInUse.Text = dialogueLine.TextWithoutCharacterName.Text;
 			}
 			ConvertHTMLToBBCodeIfConfigured();
 
@@ -392,9 +449,11 @@ namespace YarnSpinnerGodot
 
 		private async Task RunLineInternal(LocalizedLine dialogueLine, Action onDialogueLineFinished)
 		{
+			protagLineText.Visible = false;
+			lineText.Visible = false;
+			RichTextLabel LineTextInUse = new RichTextLabel();
 			async Task PresentLine()
 			{
-				lineText.Visible = true;
 				SetCanvasInteractable(true);
 				SetViewAlpha(1f);
 
@@ -414,6 +473,7 @@ namespace YarnSpinnerGodot
 				}
 
 				MarkupParseResult text = dialogueLine.TextWithoutCharacterName;
+				
 				if (IsInstanceValid(characterNameText))
 				{
 					// we are set up to show a character name, but there isn't one
@@ -439,16 +499,28 @@ namespace YarnSpinnerGodot
 						text = dialogueLine.Text;
 					}
 				}
-
+				
+				//check if the protagonist is the one speaking this line, then decide which linetext to use based on that
+				if (SpeakingCharacter == protagName)
+				{
+					LineTextInUse = protagLineText;
+					lineText.Visible = false;
+				}
+				else
+				{
+					LineTextInUse = lineText;
+					protagLineText.Visible = false;
+				}
+				LineTextInUse.Visible = true;
 
 				// if we have a palette file need to add those colours into the text
 				if (IsInstanceValid(palette))
 				{
-					lineText.Text = LineView.PaletteMarkedUpText(text, palette);
+					LineTextInUse.Text = LineView.PaletteMarkedUpText(text, palette);
 				}
 				else
 				{
-					lineText.Text = text.Text;
+					LineTextInUse.Text = text.Text;
 				}
 
 				ConvertHTMLToBBCodeIfConfigured();
@@ -457,14 +529,14 @@ namespace YarnSpinnerGodot
 					// If we're using the typewriter effect, hide all of the
 					// text before we begin any possible fade (so we don't fade
 					// in on visible text).
-					lineText.VisibleRatio = 0;
+					LineTextInUse.VisibleRatio = 0;
 				}
 				else
 				{
 					// Show all characters
-					lineText.VisibleRatio = 1;
+					LineTextInUse.VisibleRatio = 1;
 				}
-				
+			
 				// Send out a signal that all the information required to display the line has
 				// been processed and is about to be shown.
 				EmitSignal(SignalName.onLineStart);
@@ -478,6 +550,7 @@ namespace YarnSpinnerGodot
 					{
 						// The fade effect was interrupted. Stop this entire
 						// task.
+						EmitSignal(SignalName.onLineInterrupted);
 						return;
 					}
 				}
@@ -491,11 +564,12 @@ namespace YarnSpinnerGodot
 					SetViewAlpha(1f);
 					SetCanvasInteractable(true);
 					await Effects.PausableTypewriter(
-						lineText,
+						LineTextInUse,
 						typewriterEffectSpeed,
 						() => EmitSignal(SignalName.onCharacterTyped),
 						() => EmitSignal(SignalName.onPauseStarted),
 						() => EmitSignal(SignalName.onPauseEnded),
+						() => EmitSignal(SignalName.onLineInterrupted),
 						pauses,
 						currentStopToken
 					);
@@ -517,7 +591,7 @@ namespace YarnSpinnerGodot
 			currentStopToken.Complete();
 
 			// All of our text should now be visible.
-			lineText.VisibleRatio = 1;
+			LineTextInUse.VisibleRatio = 1;
 
 			// Our view should at be at full opacity.
 			SetViewAlpha(1f);

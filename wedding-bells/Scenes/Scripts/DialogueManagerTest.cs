@@ -13,7 +13,7 @@ using YarnSpinnerGodot;
 // to send out signals when a line begins.
 public partial class DialogueManagerTest : Node
 {
-	[Export] private NodePath _viewControlPath;
+	[Export] private NodePath _lineTextPath;
 	[Export] private NodePath _dialogueRunnerPath;
 	[Export] private NodePath _lineViewPath;
 	[Export] private NodePath _lineBubblePath;
@@ -22,7 +22,7 @@ public partial class DialogueManagerTest : Node
 	[Export] private NodePath _actorPosTwoPath;
 	[Export] private ActorsInSceneData _actorsInSceneData;
 
-	private Control _lineText;
+	private RichTextLabel _lineText;
 	private DialogueRunner _dialogueRunner;
 	private LineView _lineView;
 	private Panel _lineBubble;
@@ -38,7 +38,7 @@ public partial class DialogueManagerTest : Node
 	{
 		Actors = _actorsInSceneData.Actors;
 
-		_lineText = GetNode<Control>(_viewControlPath);
+		_lineText = GetNode<RichTextLabel>(_lineTextPath);
 		_dialogueRunner = GetNode<DialogueRunner>(_dialogueRunnerPath);
 		_lineView = GetNode<LineView>(_lineViewPath);
 		_lineBubble = GetNode<Panel>(_lineBubblePath);
@@ -87,15 +87,18 @@ public partial class DialogueManagerTest : Node
 		{
 			// IDK why but setting the position twice makes this account for the box increasing in size from more lines of text
 			// If I just set it once, it uses the dialogue bubble size from the previous line of dialogue.
-			_lineText.GlobalPosition = _actorPosOne.GlobalPosition - new Vector2(0, _lineBubble.Size.Y + _actorSpriteOne.Texture.GetSize().Y/2);
-			_lineText.GlobalPosition = _actorPosOne.GlobalPosition - new Vector2(0, _lineBubble.Size.Y + _actorSpriteOne.Texture.GetSize().Y/2);
+			_lineText.GlobalPosition = _actorPosOne.GlobalPosition - new Vector2(0, _actorSpriteOne.Texture.GetSize().Y/2) - new Vector2(_lineText.GetSize().X/2, _lineText.GetSize().Y + 50) - GetViewport().GetVisibleRect().Position;
+			_lineText.GlobalPosition = _actorPosOne.GlobalPosition - new Vector2(0, _actorSpriteOne.Texture.GetSize().Y/2) - new Vector2(_lineText.GetSize().X/2, _lineText.GetSize().Y + 50) - GetViewport().GetVisibleRect().Position;
 			GD.Print(_actorPosOne.GlobalPosition - new Vector2(0, _lineBubble.Size.Y + _actorSpriteOne.Texture.GetSize().Y/2));
 			GD.Print(_lineText.GlobalPosition);
 		}
 		if (actorPos == "2")
 		{
-			_lineText.GlobalPosition = _actorPosTwo.GlobalPosition - new Vector2(0, _lineBubble.Size.Y + _actorSpriteTwo.Texture.GetSize().Y/2);
-			_lineText.GlobalPosition = _actorPosTwo.GlobalPosition - new Vector2(0, _lineBubble.Size.Y + _actorSpriteTwo.Texture.GetSize().Y/2);
+			GD.Print("ACTORPOS: " + _actorPosOne.GlobalPosition);
+			GD.Print("lINETEXT SIZE: " + _lineText.GetSize().X);
+			
+			_lineText.Position = _actorPosTwo.GlobalPosition - new Vector2(0, _actorSpriteTwo.Texture.GetSize().Y/2) - new Vector2(_lineText.GetSize().X/2, _lineText.GetSize().Y + 50) - GetViewport().GetVisibleRect().Position;
+			_lineText.Position = _actorPosTwo.GlobalPosition - new Vector2(0, _actorSpriteTwo.Texture.GetSize().Y/2) - new Vector2(_lineText.GetSize().X/2, _lineText.GetSize().Y + 50) - GetViewport().GetVisibleRect().Position;
 			GD.Print(_actorPosTwo.GlobalPosition - new Vector2(0, _lineBubble.Size.Y + _actorSpriteTwo.Texture.GetSize().Y/2));
 			GD.Print(_lineText.GlobalPosition);
 		}

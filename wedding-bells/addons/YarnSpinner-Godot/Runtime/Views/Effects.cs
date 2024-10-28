@@ -132,6 +132,7 @@ namespace YarnSpinnerGodot
                 null,
                 null,
                 null,
+                null,
                 stopToken
             );
         }
@@ -181,7 +182,7 @@ namespace YarnSpinnerGodot
         /// <param name="stopToken">A <see cref="TaskInterruptToken"/> that
         /// can be used to interrupt the task.</param>
         public static async Task PausableTypewriter(RichTextLabel text, float lettersPerSecond, Action onCharacterTyped,
-            Action onPauseStarted, Action onPauseEnded, Stack<(int position, float duration)> pausePositions,
+            Action onPauseStarted, Action onPauseEnded, Action onInterruptLine, Stack<(int position, float duration)> pausePositions,
             TaskInterruptToken stopToken = null)
         {
             var mainTree = (SceneTree) Engine.GetMainLoop();
@@ -201,6 +202,7 @@ namespace YarnSpinnerGodot
 
             if (stopToken?.WasInterrupted ?? false)
             {
+                onInterruptLine?.Invoke();
                 text.VisibleRatio = 1f;
                 return;
             }
@@ -241,6 +243,7 @@ namespace YarnSpinnerGodot
 
                 if (stopToken?.WasInterrupted ?? false)
                 {
+                    onInterruptLine?.Invoke();
                     text.VisibleRatio = 1f;
                     return;
                 }
