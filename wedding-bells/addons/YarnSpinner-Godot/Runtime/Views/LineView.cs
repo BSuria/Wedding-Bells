@@ -1,6 +1,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Godot;
@@ -347,23 +348,32 @@ namespace YarnSpinnerGodot
 		/// <inheritdoc/>
 		public void DismissLine(Action onDismissalComplete)
 		{
-			currentLine = null;
-
-			DismissLineInternal(onDismissalComplete);
-		}
-
-		private async void DismissLineInternal(Action onDismissalComplete)
-		{
-			SetCanvasInteractable(false);
-
-			// If we're using a fade effect, run it, and wait for it to finish.
-			if (useFadeEffect)
+			bool optionsNext = false;
+			
+			if (currentLine.Metadata != null)
 			{
-				await Effects.FadeAlpha(viewControl, 1, 0, fadeOutTime, currentStopToken);
-				currentStopToken.Complete();
+				if (currentLine.Metadata.Contains("lastline"))
+				{
+					optionsNext = true;
+				}
 			}
 
-			SetViewAlpha(0f);
+			currentLine = null;
+
+			DismissLineInternal(onDismissalComplete, optionsNext);
+		}
+
+		private async void DismissLineInternal(Action onDismissalComplete, bool optionsNext = false)
+		{
+			SetCanvasInteractable(false);
+				// If we're using a fade effect, run it, and wait for it to finish.
+				if (useFadeEffect && optionsNext == false)
+				{
+					await Effects.FadeAlpha(viewControl, 1, 0, fadeOutTime, currentStopToken);
+					currentStopToken.Complete();
+				}
+				SetViewAlpha(0f);
+			
 			if (onDismissalComplete != null)
 			{
 				onDismissalComplete();
@@ -705,6 +715,7 @@ namespace YarnSpinnerGodot
 		/// <inheritdoc />
 		public void DialogueComplete()
 		{
+			GD.Print("Dialoguecomeplete ran: ");
 			// do we still have a line lying around?
 			if (currentLine != null)
 			{

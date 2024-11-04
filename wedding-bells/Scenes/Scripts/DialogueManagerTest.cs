@@ -17,6 +17,8 @@ public partial class DialogueManagerTest : Node
 	[Export] private NodePath _dialogueRunnerPath;
 	[Export] private NodePath _lineViewPath;
 	[Export] private NodePath _lineBubblePath;
+	[Export] private NodePath _optionViewPath;
+	[Export] private NodePath _optionLastLinePath;
 	
 	[Export] private NodePath _actorPosOnePath;
 	[Export] private NodePath _actorPosTwoPath;
@@ -26,6 +28,8 @@ public partial class DialogueManagerTest : Node
 	private DialogueRunner _dialogueRunner;
 	private LineView _lineView;
 	private Panel _lineBubble;
+	private OptionsListView _optionView;
+	private RichTextLabel _optionsLastLine;
 
 	private Sprite2D _actorSpriteOne;
 	private Sprite2D _actorSpriteTwo;
@@ -42,6 +46,8 @@ public partial class DialogueManagerTest : Node
 		_dialogueRunner = GetNode<DialogueRunner>(_dialogueRunnerPath);
 		_lineView = GetNode<LineView>(_lineViewPath);
 		_lineBubble = GetNode<Panel>(_lineBubblePath);
+		_optionView = GetNode<OptionsListView>(_optionViewPath);
+		_optionsLastLine = GetNode<RichTextLabel>(_optionLastLinePath);
 
 		_actorPosOne = GetNode<Node2D>(_actorPosOnePath);
 		_actorPosTwo = GetNode<Node2D>(_actorPosTwoPath);
@@ -49,6 +55,7 @@ public partial class DialogueManagerTest : Node
 		_actorSpriteTwo = GetNode<Sprite2D>(_actorPosTwoPath);
 		
 		_lineView.onLineStart += OnLineStart;
+		_optionView.onOptionSelectBegin += OnOptionsSelectBegins;
 		_dialogueRunner.AddCommandHandler<string, string>("actorPos", setPos);
 		_dialogueRunner.AddCommandHandler<string, string>("setSprite", setSprite);
 	}
@@ -62,12 +69,12 @@ public partial class DialogueManagerTest : Node
 	{
 		GD.Print(_lineView.SpeakingCharacter);
 		GD.Print("new line started");
-		positionBox(_actorsPos[_lineView.SpeakingCharacter]);
+		positionBox(_actorsPos[_lineView.SpeakingCharacter], _lineText);
 	}
 	
 	public void BeginDialogue()
 	{
-		_dialogueRunner.StartDialogue("Oh");
+		_dialogueRunner.StartDialogue("Introductions");
 	}
 	
 	
@@ -79,7 +86,7 @@ public partial class DialogueManagerTest : Node
 		setSprite(actorName, "Neutral");
 	}
 
-	private void positionBox(string actorPos)
+	private void positionBox(string actorPos, RichTextLabel label)
 	{
 		//GD.Print(_lineText.GlobalPosition.ToString());
 		//GD.Print(_lineText.Position.ToString());
@@ -87,8 +94,8 @@ public partial class DialogueManagerTest : Node
 		{
 			// IDK why but setting the position twice makes this account for the box increasing in size from more lines of text
 			// If I just set it once, it uses the dialogue bubble size from the previous line of dialogue.
-			_lineText.GlobalPosition = _actorPosOne.GlobalPosition - new Vector2(0, _actorSpriteOne.Texture.GetSize().Y/2) - new Vector2(_lineText.GetSize().X/2, _lineText.GetSize().Y + 50) - GetViewport().GetVisibleRect().Position;
-			_lineText.GlobalPosition = _actorPosOne.GlobalPosition - new Vector2(0, _actorSpriteOne.Texture.GetSize().Y/2) - new Vector2(_lineText.GetSize().X/2, _lineText.GetSize().Y + 50) - GetViewport().GetVisibleRect().Position;
+			label.GlobalPosition = _actorPosOne.GlobalPosition - new Vector2(0, _actorSpriteOne.Texture.GetSize().Y/2) - new Vector2(label.GetSize().X/2, label.GetSize().Y + 50) - GetViewport().GetVisibleRect().Position;
+			label.GlobalPosition = _actorPosOne.GlobalPosition - new Vector2(0, _actorSpriteOne.Texture.GetSize().Y/2) - new Vector2(label.GetSize().X/2, label.GetSize().Y + 50) - GetViewport().GetVisibleRect().Position;
 			GD.Print(_actorPosOne.GlobalPosition - new Vector2(0, _lineBubble.Size.Y + _actorSpriteOne.Texture.GetSize().Y/2));
 			GD.Print(_lineText.GlobalPosition);
 		}
@@ -97,8 +104,8 @@ public partial class DialogueManagerTest : Node
 			GD.Print("ACTORPOS: " + _actorPosOne.GlobalPosition);
 			GD.Print("lINETEXT SIZE: " + _lineText.GetSize().X);
 			
-			_lineText.Position = _actorPosTwo.GlobalPosition - new Vector2(0, _actorSpriteTwo.Texture.GetSize().Y/2) - new Vector2(_lineText.GetSize().X/2, _lineText.GetSize().Y + 50) - GetViewport().GetVisibleRect().Position;
-			_lineText.Position = _actorPosTwo.GlobalPosition - new Vector2(0, _actorSpriteTwo.Texture.GetSize().Y/2) - new Vector2(_lineText.GetSize().X/2, _lineText.GetSize().Y + 50) - GetViewport().GetVisibleRect().Position;
+			label.Position = _actorPosTwo.GlobalPosition - new Vector2(0, _actorSpriteTwo.Texture.GetSize().Y/2) - new Vector2(label.GetSize().X/2, label.GetSize().Y + 50) - GetViewport().GetVisibleRect().Position;
+			label.Position = _actorPosTwo.GlobalPosition - new Vector2(0, _actorSpriteTwo.Texture.GetSize().Y/2) - new Vector2(label.GetSize().X/2, label.GetSize().Y + 50) - GetViewport().GetVisibleRect().Position;
 			GD.Print(_actorPosTwo.GlobalPosition - new Vector2(0, _lineBubble.Size.Y + _actorSpriteTwo.Texture.GetSize().Y/2));
 			GD.Print(_lineText.GlobalPosition);
 		}
@@ -118,6 +125,13 @@ public partial class DialogueManagerTest : Node
 		{
 			_actorSpriteTwo.Texture = Actors[actorName].ActorSprites[spriteName];
 		}
+	}
+
+	void OnOptionsSelectBegins()
+	{
+		//lineview.speakingcharacter does not work here as lineview returns an empty string because it is currently not running text
+		
+		positionBox(_actorsPos[_optionView.SpeakingCharacter], _optionsLastLine);
 	}
 
 }

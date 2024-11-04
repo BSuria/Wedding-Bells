@@ -11,7 +11,9 @@ public partial class ExpandBubble : RichTextLabel
 	[Export] private float minHeight;
 	
 	[Export] private NodePath LineViewPath;
+	[Export] private NodePath OptionViewPath;
 	private LineView _lineView;
+	private OptionsListView _optionView;
 	
 	private RichTextLabel label;
 
@@ -21,14 +23,21 @@ public partial class ExpandBubble : RichTextLabel
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_lineView = GetNode<LineView>(LineViewPath);
-		label = this;
-		SetSize(new Vector2(0, 0));
+		if (LineViewPath != null)
+		{
+			_lineView = GetNode<LineView>(LineViewPath);
+			_lineView.onCharacterTyped += OnCharacterTyped;
+			_lineView.onLineStart += OnLineStart;
+			_lineView.onLineInterrupted += OnLineInterrupted;
+		}
+		//SetSize(new Vector2(0, 0));
 		//SetFitContent(true);
 		//Finished += expandBox;
-		_lineView.onCharacterTyped += OnCharacterTyped;
-		_lineView.onLineStart += OnLineStart;
-		_lineView.onLineInterrupted += OnLineInterrupted;
+		if (OptionViewPath != null)
+		{
+			_optionView = GetNode<OptionsListView>(OptionViewPath);
+			_optionView.onOptionSelectBegin += OnOptionSelectBegin;
+		}
 	}
 
 	void OnCharacterTyped()
@@ -50,9 +59,10 @@ public partial class ExpandBubble : RichTextLabel
 		
 		if (Size.X < maxWidth && StringSize.X >= GetCustomMinimumSize().X)
 		{
-			SetPosition(new Vector2(Position.X - (Mathf.Clamp(StringSize.X, 0, maxWidth) - Size.X)/2, Position.Y));
-			SetSize(new Vector2(Mathf.Clamp(StringSize.X, 0, maxWidth), Size.Y));
-			GD.Print(Size.X);
+			SetPosition(new Vector2(Position.X - (Mathf.Clamp(StringSize.X + 40, 0, maxWidth) - Size.X)/2, Position.Y));
+			SetSize(new Vector2(Mathf.Clamp(StringSize.X + 40, 0, maxWidth), Size.Y));
+			GD.Print("BubbleSize.X is: " + Size.X);
+			GD.Print("StringSizeTyped is: " + StringSize);
 		}
 		if (Size.X >= maxWidth)
 		{
@@ -97,8 +107,37 @@ public partial class ExpandBubble : RichTextLabel
 		GD.Print("StringSize is: " + StringSize);
 		if (StringSize.X > GetCustomMinimumSize().X)
 		{
-			SetPosition(new Vector2(Position.X - (Mathf.Clamp(StringSize.X, 0, maxWidth) - Size.X) / 2, Position.Y));
-			SetSize(new Vector2(Mathf.Clamp(StringSize.X, 0, maxWidth), 0));
+			SetPosition(new Vector2(Position.X - (Mathf.Clamp(StringSize.X + 40, 0, maxWidth) - Size.X) / 2, Position.Y));
+			SetSize(new Vector2(Mathf.Clamp(StringSize.X + 40, 0, maxWidth), 0));
+			GD.Print("BubbleSize.X is: " + Size.X);
+		}
+		if (Size.X >= maxWidth)
+		{
+			SetAutowrapMode(TextServer.AutowrapMode.WordSmart);
+		}
+		var lastYSize = ((GetCharacterLine(currentChar)) * 50);
+		var YSize = ((GetCharacterLine(Text.Length - 1)) * 50);
+		GD.Print("CharacterLine is: " + GetCharacterLine(Text.Length) + 1);
+				SetPosition(new Vector2(Position.X, Position.Y - YSize + lastYSize));	
+				SetSize(new Vector2(Size.X, YSize + 60));
+	}
+	
+	//Now editing the bubble size for the option select lineview
+	void OnOptionSelectBegin()
+	{
+		if (Text.Length == 0)
+		{
+			return;
+		}
+		GD.Print("LINE INTERRUPTED");
+		Vector2 StringSize = GetThemeFont("normal_font")
+			.GetStringSize(Text, HorizontalAlignment.Left, -1, GetThemeFontSize("normal_font_size"));
+		GD.Print("Text is: " + Text);
+		GD.Print("Options: StringSize is: " + StringSize);
+		if (StringSize.X > GetCustomMinimumSize().X)
+		{
+			SetPosition(new Vector2(Position.X - (Mathf.Clamp(StringSize.X + 40, 0, maxWidth) - Size.X) / 2, Position.Y));
+			SetSize(new Vector2(Mathf.Clamp(StringSize.X + 40, 0, maxWidth), 0));
 		}
 		if (Size.X >= maxWidth)
 		{
@@ -106,8 +145,8 @@ public partial class ExpandBubble : RichTextLabel
 		}
 		var YSize = ((GetCharacterLine(Text.Length - 1)) * 50);
 		GD.Print("CharacterLine is: " + GetCharacterLine(Text.Length) + 1);
-				SetPosition(new Vector2(Position.X, Position.Y - YSize));	
-				SetSize(new Vector2(Size.X, YSize + 60));
+		SetPosition(new Vector2(Position.X, Position.Y - YSize));	
+		SetSize(new Vector2(Size.X, YSize + 60));
 	}
 	
 	/*

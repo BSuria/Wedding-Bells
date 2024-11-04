@@ -864,6 +864,7 @@ namespace YarnSpinnerGodot
 
 		void HandleOptions(OptionSet options)
 		{
+			GD.Print("HandleOptions was run");
 			currentOptions = options;
 
 			DialogueOption[] optionSet = new DialogueOption[options.Options.Length];
@@ -872,7 +873,8 @@ namespace YarnSpinnerGodot
 				// Localize the line associated with the option
 				var localisedLine = lineProvider.GetLocalizedLine(options.Options[i].Line);
 				var text = Dialogue.ExpandSubstitutions(localisedLine.RawText, options.Options[i].Line.Substitutions);
-
+				GD.Print("TextOptions? run were: " + text);
+				
 				Dialogue.LanguageCode = lineProvider.LocaleCode;
 
 				try
@@ -1128,6 +1130,7 @@ namespace YarnSpinnerGodot
 		/// Action{int})"/> is in the middle of being called.</exception>
 		void SelectedOption(int optionIndex)
 		{
+			GD.Print("SelectedOption was run");
 			if (IsOptionSelectionAllowed == false)
 			{
 				throw new InvalidOperationException(

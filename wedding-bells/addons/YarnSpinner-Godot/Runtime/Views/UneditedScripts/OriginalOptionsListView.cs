@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Godot;
 
+/*
 namespace YarnSpinnerGodot
 {
     [GlobalClass]
@@ -101,21 +102,20 @@ namespace YarnSpinnerGodot
                 // by waiting a frame
                 var mainTree = (SceneTree)Engine.GetMainLoop();
                 await mainTree.ToSignal(mainTree, SceneTree.SignalName.ProcessFrame);
-                
                 viewControl.Visible = false;
-                /*
                 // Hide all existing option views
                 foreach (var optionView in optionViews)
                 {
                     optionView.Visible = false;
                 }
+
                 // If we don't already have enough option views, create more
                 while (dialogueOptions.Length > optionViews.Count)
                 {
                     var optionView = CreateNewOptionView();
                     optionView.Visible = false;
                 }
-                
+
                 // Set up all of the option views
                 int optionViewsCreated = 0;
 
@@ -143,9 +143,6 @@ namespace YarnSpinnerGodot
 
                     optionViewsCreated += 1;
                 }
-                */
-                
-                optionsText.PrepareLine(dialogueOptions,OptionViewWasSelected);
 
                 // Update the last line, if one is configured
                 if (IsInstanceValid(lastLineText))
@@ -181,15 +178,12 @@ namespace YarnSpinnerGodot
                 OnOptionSelected = onOptionSelected;
 
                 // Fade it all in
-                await Effects.FadeAlpha(viewControl, 0, 1, 0);
-                await Effects.FadeAlpha(optionsText, 0, 1, fadeTime);
-                //viewControl.Visible = true;
+                await Effects.FadeAlpha(viewControl, 0, 1, fadeTime);
 
                 /// <summary>
                 /// Creates and configures a new <see cref="OptionView"/>, and adds
                 /// it to <see cref="optionViews"/>.
                 /// </summary>
-                /*
                 OptionView CreateNewOptionView()
                 {
                     var optionView = optionViewPrefab.Instantiate<OptionView>();
@@ -200,7 +194,6 @@ namespace YarnSpinnerGodot
 
                     return optionView;
                 }
-                */
 
                 /// <summary>
                 /// Called by <see cref="OptionView"/> objects.
@@ -226,7 +219,7 @@ namespace YarnSpinnerGodot
                     }
                 }
 
-                //optionViews[0].GrabFocus();
+                optionViews[0].GrabFocus();
             }
             catch (Exception e)
             {
@@ -240,7 +233,6 @@ namespace YarnSpinnerGodot
             // do we still have a line lying around?
             if (viewControl.Visible)
             {
-                optionsText.Complete();
                 lastSeenLine = null;
                 OnOptionSelected = null;
                 if (lastLineText != null)
@@ -266,3 +258,4 @@ namespace YarnSpinnerGodot
         }
     }
 }
+*/

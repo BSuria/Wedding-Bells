@@ -1,0 +1,114 @@
+
+title: Introductions
+---
+<<actorPos Manuel 1>>
+<<actorPos Valerie 2>>
+
+<<setSprite Manuel Happy>>
+Manuel: Hey, hi! It's great to be here, I'm crazy excited to get started!
+<<setSprite Valerie Neutral>>
+Valerie: Hey! Great to meet you...he's not gonna be any less jumpy this whole time.
+    <<setSprite Manuel Happy>>
+    Manuel: Can't help it, haha.
+        -> Haha, I don't mind at all! It's great to meet you both. Welcome to my office, we'll be spending plenty of time to prepare for your big day!
+            <<setSprite Manuel Happy>>
+            Manuel: Right! What's first???
+                -> Well, we should get to work on a schedule and a budget. But I'd love to take some time to get to know you both a bit better. 
+                    <<jump Intros>>
+                -> First off...We'll make a nice framework for planning the wedding, based on your budget and schedules, and then I can take it from there.
+                    <<jump Budgeting>>
+        -> Ah, I get it. Are you two ready to get to work? There's lots to do already...
+            <<setSprite Valerie Happy>>
+            Valerie: Yeah, it's what we're here for, heh...
+                -> OK. The process starts with the creation of a schedule and allocating your budget. Together, we'll make a nice framework for planning the wedding and then I can take it from there.
+                    <<jump Budgeting>>
+
+===
+title: Budgeting
+---
+<<setSprite Valerie Neutral>>
+Valerie: Alright the schedule then...?
+    <<setSprite Manuel Happy>>
+    Manuel: Plan today, wedding tomorrow!
+        -> Definitely not tomorrow, haha! Let's start off with the budget actually. Our contract said $XX,XXX.XX. Is that still accurate? And would we like to set a different spending goal?
+            <<setSprite Valerie Neutral>>
+            Valerie: Yeah it's still the same. What's the point of a spending goal?
+                -> It's meant for certain cases. Let's say, you wished to spend 3/4 of the budget and keep the rest. Setting a different benchmark will help us stay under the total budget. It's not a guarantee, of course, but we can plan to have a bit leftover if you'd prefer that.
+                  <<setSprite Manuel Happy>>
+                  Manuel: No, no...I want the best we can get. 
+                    -> Alright! Let's move onto the schedule then.
+                        <<jump Scheduling>>
+                    -> I completely understand. Next up is the schedule
+                        <<jump Scheduling>> 
+                -> Basically, it lets us set a target below your actual budget that I can try to stick to. I'll go past the spending goal if you two have specific requests that we need the "extra" funds for. It's not necessary though...
+                    <<setSprite Valerie Neutral>>
+                    Valerie: I mean it could be smart...
+                    <<setSprite Manuel Happy>>
+                    Manuel: I don't really care about it though. I want the best we can get!
+                        -> I completely understand. We don't have to set one, then! Let's move forward then, $XX,XXX.XX is the budget...Next up is setting our schedule!
+                            <<jump Scheduling>> 
+        -> Yeah...let's focus on the budget first. Our contract said $XX,XXX.XX. If that's still accurate then I'll mark that down for us...
+            <<setSprite Manuel Neutral>>
+            Manuel: Yup, still the same. 
+            <<setSprite Valerie Neutral>>
+            Valerie: You think we'll use it all?
+                -> We can definitely come close, especially depending on the exact things you two are looking for. But this is a good budget for a great wedding, so don't stress.
+                    <<setSprite Manuel Neutral>>
+                    Manuel: Cool. Cool! Schedule time?
+                        -> Yes. We'll go over some of the major tasks and expectations from you two and then I should be good to get working. 
+                            <<jump Scheduling>>
+                -> Certainly. In fact, depending on what you two are hoping for, it might be pretty tight. But I promise to get you the most out of your money, it's a good fund, so we'll make a great wedding.
+                    <<setSprite Valerie Neutral>>
+                    Valerie: OK. Ok...so budget's done. Schedule's next?
+                        -> Yes, next up is to set a rough schedule for me to plan out the wedding. When we get your outfits, the cake, reserve the venue, etc. 
+                            <<jump Scheduling>>
+                -> It might happen. Let's look at the schedule and talk preferences and we can see...
+                    <<jump Scheduling>>
+===
+
+title: Intros
+---
+<<setSprite Valerie Neutral>>
+Valerie: Get-to-know-yous first? Sounds good! I'm Valerie, go by Val mostly. This cute guy is Manuel, we've been together for almost 10 and a half years now.
+<<setSprite Manuel Neutral>>
+Manuel: Haha, makes me feel old every time you say that babe...
+<<setSprite Valerie Happy>>
+Valerie: You're so damn old.
+<<setSprite Manuel Happy>>
+Manuel: Older by two months!
+<<setSprite Valerie Happy>>
+Valerie: Exactly? A damn senior citizen.
+    -> Haha, you guys are a riot. Tell me more about your relationship. When did you meet? What was your best date?
+        <<setSprite Manuel Neutral>>
+        Manuel: We met in highschool...but our best date? Hmm...
+        <<setSprite Valerie Neutral>>
+        Valerie: Hands down the best date was a few months ago for our 10th anniversary!
+        <<setSprite Manuel Happy>>
+        Manuel: Yes! We went to that fancy french place on 5th street.
+        <<setSprite Valerie Happy>>
+        Valerie: Oh and you got me those beautiful red flowers...the amaryllises! 
+            -> That sounds like a lovely evening! Let's chat some more...tell me more about how you met...
+            <<setSprite Manuel Neutral>>
+            Manuel: Oh yeah. Like I said, we met in high school.
+            <<setSprite Valerie Neutral>>
+            Valerie: Mr. Washington's basics of circuitry course in Sophomore year. 
+                -> Oh you two went to a technical school? That's awesome! Thanks for this, I'm looking forward to learning more about you both through our time together! Let's move onto the budget now.
+            <<jump Budgeting>>
+    -> Oh...I don't know about a "senior", but 10 years together is amazing! Why don't you tell me about your relationship...? How'd you meet? 
+        <<setSprite Manuel Neutral>>
+        Manuel: We met back in high school.
+        <<setSprite Valerie Neutral>>
+        Valerie: Mr. Washington's basics of circuitry course in Sophomore year. 
+            -> Oh you two went to the tech school in the city? That's awesome! Thanks for this, I'm looking forward to learning more about you both! Let's move onto the budget now
+        <<jump Budgeting>>
+    -> Oh wow. Thanks for that, let's move onto the budget now
+        <<jump Budgeting>>
+
+===
+
+title: Scheduling
+---
+<<setSprite Manuel Neutral>>
+Manuel: So how's the scheduling work?
+    -> We're going to lay out a basic outline for the wedding tasks. We have to decide when to send invites, where the venue is, get caterers, a cake, your flowers, a photographer, and much more. Don't worry, I know it sounds like a lot but I'm here to help you. Let's just get everything jotted down and we can discuss further... (starts the scheduling minigame)
+===
