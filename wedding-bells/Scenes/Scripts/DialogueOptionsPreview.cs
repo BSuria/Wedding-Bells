@@ -18,6 +18,7 @@ namespace YarnSpinnerGodot
 		/// running.
 		/// </summary>
 		public bool AreOptionsActive { get; set; }
+		public bool AreOptionsAdvancable { get; set; }
 
 		private int _selectedOption = 0;
 
@@ -39,9 +40,20 @@ namespace YarnSpinnerGodot
 		[Export] BoxContainer _pipBoxContainer;
 		private List<OptionsPip> optionsPips = new List<OptionsPip>();
 
+		private Timer _actionTimer = new Timer();
+
 		// Called when the node enters the scene tree for the first time.
 		public override void _Ready()
 		{
+			AreOptionsAdvancable = false;
+			AreOptionsActive = false;
+			// timer to add a delay between transitioning from dialogue to choices
+			// so players don't accidentally pick something when skipping through
+			// dialogue
+			AddChild(_actionTimer);
+			_actionTimer.Autostart = false;
+			_actionTimer.Timeout += OnTimerTimeout;
+			_actionTimer.OneShot = true;
 		}
 
 		public void PrepareLine(DialogueOption[] dialogueOptions, Action<DialogueOption> onOptionSelected)
@@ -49,8 +61,8 @@ namespace YarnSpinnerGodot
 			//Visible = true;
 			_options = dialogueOptions;
 			OnOptionSelected = onOptionSelected;
-			AreOptionsActive = true;
 			hasSubmittedOptionSelection = false;
+			AreOptionsActive = true;
 			foreach (var optionsPip in optionsPips)
 			{
 				optionsPip.Visible = false;
@@ -85,8 +97,15 @@ namespace YarnSpinnerGodot
 				optionViewsCreated += 1;
 			}
 			SetOptionText(0);
+			_actionTimer.Start(0.6);
 		}
 
+		private void OnTimerTimeout()
+		{
+			GD.Print("Timed out");
+			AreOptionsAdvancable = true;
+		}
+		
 		public void Complete()
 		{
 			if (Visible)
@@ -94,6 +113,7 @@ namespace YarnSpinnerGodot
 				OnOptionSelected = null;
 				_options = null;
 				AreOptionsActive = false;
+				AreOptionsAdvancable = false;
 				_selectedOption = 0;
 				Visible = false;
 			}
@@ -114,7 +134,7 @@ namespace YarnSpinnerGodot
 				{
 					ShiftPreview(direction.RIGHT);
 				}
-				if (@event.IsActionPressed("AdvanceDialogue"))
+				if (@event.IsActionPressed("AdvanceDialogue") && AreOptionsAdvancable)
 				{
 					InvokeOptionSelected();
 				}
@@ -191,6 +211,7 @@ namespace YarnSpinnerGodot
 
 			OnOptionSelected.Invoke(_options[_selectedOption]);
 			AreOptionsActive = false;
+			AreOptionsAdvancable = false;
 			hasSubmittedOptionSelection = true;
 			_selectedOption = 0;
 			Visible = false;
