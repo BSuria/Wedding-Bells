@@ -72,9 +72,9 @@ public partial class DialogueManagerTest : Node
 		positionBox(_actorsPos[_lineView.SpeakingCharacter], _lineText);
 	}
 	
-	public void BeginDialogue()
+	public void BeginDialogue(String node)
 	{
-		_dialogueRunner.StartDialogue("Introductions");
+		_dialogueRunner.StartDialogue(node);
 	}
 	
 	

@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://de1ttg0dkjig7"]
+[gd_scene load_steps=26 format=3 uid="uid://de1ttg0dkjig7"]
 
 [ext_resource type="Script" path="res://addons/YarnSpinner-Godot/Runtime/DialogueRunner.cs" id="1_d2cbf"]
 [ext_resource type="Script" path="res://Scenes/Scripts/TestControl.cs" id="3_0mfya"]
@@ -16,7 +16,8 @@
 [ext_resource type="Texture2D" uid="uid://bmmlsae8ymuu2" path="res://Scenes/Sprites/Selector-On1.png" id="8_qvaa8"]
 [ext_resource type="PackedScene" uid="uid://dhnl6qatalt6x" path="res://addons/YarnSpinner-Godot/Scenes/RoundedOptionView.tscn" id="10_o6bo7"]
 [ext_resource type="StyleBox" uid="uid://rlrkluns7mv1" path="res://Scenes/Styles/testBox.tres" id="10_uxt2g"]
-[ext_resource type="Script" path="res://Scenes/DialogueOptionsPreview.cs" id="12_ntdfk"]
+[ext_resource type="Script" path="res://Scenes/Scripts/DialogueOptionsPreview.cs" id="12_ntdfk"]
+[ext_resource type="PackedScene" uid="uid://bdehs38v0wudd" path="res://Scenes/Prefabs/OptionsPipScene.tscn" id="13_tux2b"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ymf4v"]
 
@@ -410,7 +411,7 @@ grow_vertical = 2
 size_flags_vertical = 3
 theme_override_styles/panel = ExtResource("10_uxt2g")
 
-[node name="OptionsPreview" type="RichTextLabel" parent="RoundedYarnSpinnerCanvasLayer/OptionsListView/ViewControl"]
+[node name="OptionsPreview" type="RichTextLabel" parent="RoundedYarnSpinnerCanvasLayer/OptionsListView/ViewControl" node_paths=PackedStringArray("_arrowLeft", "_arrowRight", "_pipBoxContainer")]
 clip_contents = false
 custom_minimum_size = Vector2(0, 160)
 layout_mode = 1
@@ -441,6 +442,10 @@ text = "aa"
 fit_content = true
 scroll_active = false
 script = ExtResource("12_ntdfk")
+_arrowLeft = NodePath("Arrow")
+_arrowRight = NodePath("Arrow2")
+optionsPipPrefab = ExtResource("13_tux2b")
+_pipBoxContainer = NodePath("HBoxContainer")
 metadata/_edit_use_anchors_ = true
 
 [node name="LineBubble" type="Panel" parent="RoundedYarnSpinnerCanvasLayer/OptionsListView/ViewControl/OptionsPreview"]
@@ -452,6 +457,21 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = ExtResource("10_uxt2g")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="RoundedYarnSpinnerCanvasLayer/OptionsListView/ViewControl/OptionsPreview"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 285.0
+offset_top = -211.9
+offset_right = 887.0
+offset_bottom = -134.9
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 2
 
 [node name="Arrow" type="TextureRect" parent="RoundedYarnSpinnerCanvasLayer/OptionsListView/ViewControl/OptionsPreview"]
 modulate = Color(1, 0.772549, 1, 1)

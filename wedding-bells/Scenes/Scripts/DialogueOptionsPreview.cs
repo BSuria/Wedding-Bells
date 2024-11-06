@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace YarnSpinnerGodot
 {
@@ -22,12 +24,20 @@ namespace YarnSpinnerGodot
 		// Holds the possible dialogue choices
 		private DialogueOption[] _options;
 		
+		//Images for the arrows that show available dialogue
+		[Export] private TextureRect _arrowLeft;
+		[Export] private TextureRect _arrowRight;
+		
 		// The method we should call when an option has been selected.
 		Action<DialogueOption> OnOptionSelected;
 		
 		private bool hasSubmittedOptionSelection = false;
 		
 		public MarkupPalette palette;
+		
+		[Export] PackedScene optionsPipPrefab;
+		[Export] BoxContainer _pipBoxContainer;
+		private List<OptionsPip> optionsPips = new List<OptionsPip>();
 
 		// Called when the node enters the scene tree for the first time.
 		public override void _Ready()
@@ -41,6 +51,39 @@ namespace YarnSpinnerGodot
 			OnOptionSelected = onOptionSelected;
 			AreOptionsActive = true;
 			hasSubmittedOptionSelection = false;
+			foreach (var optionsPip in optionsPips)
+			{
+				optionsPip.Visible = false;
+			}
+			
+			while (dialogueOptions.Length > optionsPips.Count)
+			{
+				var optionsPip = CreateNewOptionPip();
+				optionsPip.Visible = false;
+			}
+			int optionViewsCreated = 0;
+
+			for (int i = 0; i < _options.Length; i++)
+			{
+				var optionsPip = optionsPips[i];
+				var option = _options[i];
+
+				if (option.IsAvailable == false)
+				{
+					// Don't show this option.
+					continue;
+				}
+
+				optionsPip.Visible = true;
+
+				// The first available option is selected by default
+				//if (optionViewsCreated == 0)
+				//{
+				//	optionView.GrabFocus();
+				//}
+
+				optionViewsCreated += 1;
+			}
 			SetOptionText(0);
 		}
 
@@ -93,6 +136,8 @@ namespace YarnSpinnerGodot
 
 		void SetOptionText(int direction)
 		{
+			/*
+			// Following code is for if I want the options to loop instead of being clamped
 			int selectedOption = (_selectedOption + direction);
 			GD.Print("SelectedOption was: " + (selectedOption));
 			if (selectedOption > _options.Length - 1)
@@ -104,7 +149,25 @@ namespace YarnSpinnerGodot
 			}
 			_selectedOption = selectedOption;
 			GD.Print("SelectedOption was: " + (_options.Length - 1));
-			var line = _options[selectedOption].Line.Text;
+			*/
+			_selectedOption = Math.Clamp(_selectedOption + direction, 0, _options.Length - 1);
+			var line = _options[_selectedOption].Line.Text;
+			_arrowLeft.Visible = true;
+			_arrowRight.Visible = true;
+			if (_selectedOption == 0)
+			{
+				_arrowLeft.Visible = false;
+			}
+
+			if (_selectedOption == _options.Length - 1)
+			{
+				_arrowRight.Visible = false;
+			}
+
+			for (int i = 0; i < _options.Length; i++)
+			{
+				optionsPips[i].OptionSelected(_selectedOption == i);
+			}
 			if (IsInstanceValid(palette))
 			{
 				Text =
@@ -131,6 +194,16 @@ namespace YarnSpinnerGodot
 			hasSubmittedOptionSelection = true;
 			_selectedOption = 0;
 			Visible = false;
+		}
+		
+		OptionsPip CreateNewOptionPip()
+		{
+			var optionPip = optionsPipPrefab.Instantiate<OptionsPip>();
+			_pipBoxContainer.AddChild(optionPip);
+			
+			optionsPips.Add(optionPip);
+
+			return optionPip;
 		}
 	}
 }

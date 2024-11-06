@@ -18,7 +18,7 @@ public partial class TestControl : Node
 	{
 		if (Input.IsActionPressed("Press"))
 		{
-			_dialogueManager.BeginDialogue();
+			_dialogueManager.BeginDialogue("Introductions");
 			GD.Print("clicked");
 		}
 	}
