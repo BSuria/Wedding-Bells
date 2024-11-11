@@ -285,7 +285,7 @@ namespace YarnSpinnerGodot
 		
 		
 		[Signal]
-		public delegate void onLineStartEventHandler();
+		public delegate void onLineStartEventHandler(String currentLine);
 
 		public override void _Ready()
 		{
@@ -549,7 +549,7 @@ namespace YarnSpinnerGodot
 			
 				// Send out a signal that all the information required to display the line has
 				// been processed and is about to be shown.
-				EmitSignal(SignalName.onLineStart);
+				EmitSignal(SignalName.onLineStart, LineTextInUse);
 
 				// If we're using the fade effect, start it, and wait for it to
 				// finish.

@@ -65,7 +65,7 @@ public partial class DialogueManagerTest : Node
 	{
 	}
 
-	void OnLineStart()
+	void OnLineStart(String lineText)
 	{
 		GD.Print(_lineView.SpeakingCharacter);
 		GD.Print("new line started");

@@ -40,8 +40,11 @@ public partial class ExpandBubble : RichTextLabel
 		}
 	}
 
+	//This is commented out, if we want the bubbles to change size as text is typed out. Such as having
+	// the bubble start small and expand horizontally or vertically.
 	void OnCharacterTyped()
 	{
+		/*
 		Vector2 StringSize = GetThemeFont("normal_font")
 			.GetStringSize(Text.Left(currentChar), HorizontalAlignment.Left, -1, GetThemeFontSize("normal_font_size"));
 		GD.Print(StringSize);
@@ -83,19 +86,53 @@ public partial class ExpandBubble : RichTextLabel
 			//SetFitContent(true);
 			//Before this, I must resize it so size is consistent in case it overshot
 		}
+		*/
 	}
 	
-	void OnLineStart ()
+	void OnLineStart (String line)
 	{
+		//The following 5 or 6 lines of code are necessary no matter if the bubble starts at
+		//max size or expands over time
 		SetPosition(Vector2.Zero);
 		SetAutowrapMode(TextServer.AutowrapMode.Off);
 		SetFitContent(false);
 		SetSize(new Vector2(GetCustomMinimumSize().X, GetCustomMinimumSize().Y));
 		currentChar = 1;
+		
+		//The following code is used for if we want the bubble to start at its maximum size.
+		//It will wrap the text pretty closesly, so there won't be as much blank space as using
+		//the standard text fitcontent/autowrap, we can also define a minimum and maximum size for
+		//the text bubble, which is not possible with just fitcontent/autowrap
+		
+		if (Text.Length == 0)
+		{
+			return;
+		}
+		GD.Print("LINE INTERRUPTED");
+		Vector2 StringSize = GetThemeFont("normal_font")
+			.GetStringSize(Text, HorizontalAlignment.Left, -1, GetThemeFontSize("normal_font_size"));
+		GD.Print("Text is: " + Text);
+		GD.Print("Options: StringSize is: " + StringSize);
+		if (StringSize.X > GetCustomMinimumSize().X)
+		{
+			SetPosition(new Vector2(Position.X - (Mathf.Clamp(StringSize.X + 40, 0, maxWidth) - Size.X) / 2, Position.Y));
+			SetSize(new Vector2(Mathf.Clamp(StringSize.X + 40, 0, maxWidth), 0));
+		}
+		if (Size.X >= maxWidth)
+		{
+			SetAutowrapMode(TextServer.AutowrapMode.WordSmart);
+		}
+		var YSize = ((GetCharacterLine(Text.Length - 1)) * 50);
+		GD.Print("CharacterLine is: " + GetCharacterLine(Text.Length) + 1);
+		SetPosition(new Vector2(Position.X, Position.Y - YSize));	
+		SetSize(new Vector2(Size.X, YSize + 60));
 	}
 	
+	//This function is only necessary if the bubble is not at its maximum size immediately.
+	//So if we have the bubble start small and expand then this needs to be uncommented
 	void OnLineInterrupted()
 	{
+		/*
 		if (Text.Length == 0)
 		{
 			return;
@@ -120,6 +157,7 @@ public partial class ExpandBubble : RichTextLabel
 		GD.Print("CharacterLine is: " + GetCharacterLine(Text.Length) + 1);
 				SetPosition(new Vector2(Position.X, Position.Y - YSize + lastYSize));	
 				SetSize(new Vector2(Size.X, YSize + 60));
+				*/
 	}
 	
 	//Now editing the bubble size for the option select lineview
